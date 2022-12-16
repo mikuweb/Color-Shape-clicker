@@ -1,0 +1,47 @@
+body {
+  background-color: #000;
+  margin: 0;
+  color: #fff;
+}
+
+.title {
+  text-align: center;
+}
+
+.container {
+  margin: 10px auto;
+  width: 600px;
+  padding: 20px;
+  font-weight: bold;
+  border: solid 3px #fff;
+  background-color: #000;
+}
+
+.description {
+}
+
+.flex {
+  display: flex;
+  justify-content: space-between;
+}
+
+.items-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+.item {
+  width: calc(25% - 10px * 3);
+  height: 125px;
+  padding: 10px;
+  font-weight: bold;
+  border: solid 3px #fff;
+  box-sizing: border-box;
+  /* 調べる */
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
