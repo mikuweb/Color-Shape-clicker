@@ -42,12 +42,12 @@ export const Circle = ({ color }) => {
   );
 };
 
-export const Line = ({ color }) => {
+export const Slash = ({ color }) => {
   return (
     <div
       style={{
         display: "block",
-        width: "40px",
+        width: "70px",
         height: "3px",
         transform: "rotate(-45deg)",
         backgroundColor: color,
@@ -89,7 +89,7 @@ export const Plus = ({ color }) => {
 
 const Shape = ({ color, shape }) => {
   if (shape === "plus") return <Plus color={color} />;
-  if (shape === "line") return <Line color={color} />;
+  if (shape === "slash") return <Slash color={color} />;
   if (shape === "circle") return <Circle color={color} />;
   if (shape === "diamond") return <Diamond color={color} />;
   if (shape === "square") return <Square color={color} />;
