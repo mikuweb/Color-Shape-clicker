@@ -121,16 +121,33 @@ function App() {
   };
 
   //resetGame function ★★
-  //100
+  //1.When it get 100 modal open
+  const [showModal, setShowModal] = useState(false);
+
   useEffect(() => {
     if (score >= 100) {
       console.log("100てん");
+      setShowModal((preClick) => !preClick);
     }
   }, [score]);
+  //2.Closed Modal
+  const resetGame = () => {
+    setShowModal((preClick) => !preClick);
+  };
 
   //Markup
   return (
     <>
+      {showModal ? (
+        <div className="modal_background">
+          <div className="modal_wrapper">
+            <h2 className="modal_text">🎉GAME CLEAR🎉</h2>
+            <button className="modal_btn" onClick={resetGame}>
+              🎮START AGAIN🎮
+            </button>
+          </div>
+        </div>
+      ) : null}
       <h1 className="title">Let's play Color Shape Clicker!</h1>
       <div className="container">
         <div className="flex">
@@ -179,6 +196,3 @@ export default App;
 // Want to do //
 // When everything is clicked "Correct! pop up" and "Reset button" show up
 //
-
-
-
