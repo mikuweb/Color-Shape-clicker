@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Shape from "./shapes";
 import "./style.css";
 
@@ -24,28 +24,111 @@ function App() {
 
   //Score
   const [score, setScore] = useState(0);
+  useEffect(() => console.log(randomShapeColor), [randomShapeColor]); //Question: What is this?
 
-  useEffect(() => console.log(randomShapeColor), [randomShapeColor]);
+  //Number Of Correct Clicked
+  const [numberOfCorrectClicked, setNumberOfCorrectClicked] = useState(0);
 
   //Description
-
   const [description, setDescription] = useState(
     randomShapeColor[Math.floor(Math.random() * randomShapeColor.length)].shape
       .props
   );
 
+  //Check elements which have color&shape that description says from randomShapeColor-Array
+  const allYouWantToClick = randomShapeColor.filter(
+    (i) =>
+      i.shape.props.shape === description.shape &&
+      i.shape.props.color === description.color
+  );
+
+  const numberOfCorrectAnswer = allYouWantToClick.length;
+  console.log(numberOfCorrectAnswer);
+
   //Clicked
   const handleClick = (id) => {
     const copyOfRandomShapeColor = [...randomShapeColor];
-    copyOfRandomShapeColor[id].clicked = true;
-    setRandomShapeColor(copyOfRandomShapeColor);
+
+    //Score up&down
     copyOfRandomShapeColor[id].shape.props.shape === description.shape &&
     copyOfRandomShapeColor[id].shape.props.color === description.color
       ? setScore(score + 10)
       : setScore(score - 10);
-    console.log(randomShapeColor);
+    // console.log(randomShapeColor);
+
+    //Check
+    //1.if not clicked 2. if clicked correct shape 3.if clicked correct color
+    if (
+      copyOfRandomShapeColor[id].clicked === false &&
+      copyOfRandomShapeColor[id].shape.props.shape === description.shape &&
+      copyOfRandomShapeColor[id].shape.props.color === description.color
+    ) {
+      if (numberOfCorrectClicked + 1 == numberOfCorrectAnswer) {
+        nextGame();
+        return; //function is over here
+      }
+      setNumberOfCorrectClicked(numberOfCorrectClicked + 1);
+    }
+
+    //Click ⇒ clicked = true;
+    copyOfRandomShapeColor[id].clicked = true;
+    setRandomShapeColor(copyOfRandomShapeColor);
   };
 
+  //Time left
+  const [timeLeft, setTimeLeft] = useState(10);
+  const timeLeftRef = useRef(10);
+
+  useEffect(() => {
+    let countdown;
+    countdown = setInterval(() => {
+      setTimeLeft((t) => t - 1);
+      timeLeftRef.current = timeLeftRef.current - 1;
+      // console.log(timeLeftRef.current);
+      const percent = (timeLeftRef.current / 10) * 100;
+      document.querySelector(".time-left-filled").style.width = `${percent}%`;
+
+      if (timeLeftRef.current <= 0) {
+        clearInterval(countdown);
+      }
+    }, 1000);
+  }, []);
+
+  //nextGame function
+  const nextGame = () => {
+    //reset timeLeft
+    setTimeLeft(10);
+    timeLeftRef.current = 10;
+
+    //reset randomShapeColor
+    const newRandomShapeColor = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map(
+      (id) => ({
+        id: id,
+        shape: generateRandomShape(),
+        clicked: false,
+      })
+    );
+    setRandomShapeColor(newRandomShapeColor);
+
+    //reset description
+    setDescription(
+      newRandomShapeColor[Math.floor(Math.random() * randomShapeColor.length)]
+        .shape.props
+    );
+
+    //reset setNumberOfCorrectClicked
+    setNumberOfCorrectClicked(0);
+  };
+
+  //resetGame function ★★
+  //100
+  useEffect(() => {
+    if (score >= 100) {
+      console.log("100てん");
+    }
+  }, [score]);
+
+  //Markup
   return (
     <>
       <h1 className="title">Let's play Color Shape Clicker!</h1>
@@ -62,7 +145,9 @@ function App() {
             </span>{" "}
             {description.shape}
           </p>
-          <p className="score">Score: {score} Pts</p>
+          <p className="score">
+            Score:<span className="score-num">{score}</span> Pts
+          </p>
         </div>
 
         <div className="items-container">
@@ -81,7 +166,7 @@ function App() {
         <div className="time-left-bar">
           <div className="time-left-filled"></div>
         </div>
-        <div className="time-left">Time left: 9 sec</div>
+        <div className="time-left">Time left: {timeLeft} sec</div>
       </div>
     </>
   );
@@ -89,15 +174,11 @@ function App() {
 
 export default App;
 
-// const hi = "hi"
-// hi = "bye" // not ok
+// Question: how to uploar whick a mole on github
 
-// const arr = [1,2,3,4]
-// arr.push(6) // ok
-// arr[3] = 8 // ok
-// arr = [3,54,6,67] // not ok
+// Want to do //
+// When everything is clicked "Correct! pop up" and "Reset button" show up
+//
 
-// const a = [1,2,3,4,5]
-// const b = [...a] //b == [1,2,3,4,5]
-//  b[3] = "hello"
-//  console.log(b) -> [1,2,3,"hello",5]
+
+
