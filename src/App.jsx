@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { Modal } from "./components/Modal";
 import Shape from "./shapes";
 import "./style.css";
 
@@ -90,9 +91,14 @@ function App() {
 
       if (timeLeftRef.current <= 0) {
         clearInterval(countdown);
+        //Show Modal - Game Over
+        setShowGameoverModal(true);
       }
     }, 1000);
   }, []);
+
+  //resetGame function - Game Over ★★
+  const [showGameoverModal, setShowGameoverModal] = useState(false);
 
   //nextGame function
   const nextGame = () => {
@@ -120,34 +126,52 @@ function App() {
     setNumberOfCorrectClicked(0);
   };
 
-  //resetGame function ★★
+  //resetGame function - Game Clear
   //1.When it get 100 modal open
-  const [showModal, setShowModal] = useState(false);
+  const [showClearModal, setShowClearModal] = useState(false);
 
   useEffect(() => {
     if (score >= 100) {
       console.log("100てん");
-      setShowModal((preClick) => !preClick);
+      setShowClearModal(true);
     }
   }, [score]);
-  //2.Closed Modal
+  //2.Start-Again button
   const resetGame = () => {
-    setShowModal((preClick) => !preClick);
+    //Closed Modal
+    setShowClearModal(false);
+    setShowGameoverModal(false);
+
+    //reset timeLeft
+    setTimeLeft(10);
+    timeLeftRef.current = 10;
+
+    //reset randomShapeColor
+    const newRandomShapeColor = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map(
+      (id) => ({
+        id: id,
+        shape: generateRandomShape(),
+        clicked: false,
+      })
+    );
+    setRandomShapeColor(newRandomShapeColor);
+
+    //reset description
+    setDescription(
+      newRandomShapeColor[Math.floor(Math.random() * randomShapeColor.length)]
+        .shape.props
+    );
+
+    //reset setNumberOfCorrectClicked
+    setNumberOfCorrectClicked(0);
+
+    //reset score
+    setScore(0);
   };
 
   //Markup
   return (
     <>
-      {showModal ? (
-        <div className="modal_background">
-          <div className="modal_wrapper">
-            <h2 className="modal_text">🎉GAME CLEAR🎉</h2>
-            <button className="modal_btn" onClick={resetGame}>
-              🎮START AGAIN🎮
-            </button>
-          </div>
-        </div>
-      ) : null}
       <h1 className="title">Let's play Color Shape Clicker!</h1>
       <div className="container">
         <div className="flex">
@@ -185,6 +209,12 @@ function App() {
         </div>
         <div className="time-left">Time left: {timeLeft} sec</div>
       </div>
+      {showClearModal ? (
+        <Modal status={"🎉GAME CLEAR🎉"} resetGame={resetGame} />
+      ) : null}
+      {showGameoverModal ? (
+        <Modal status={"💀GAME OVER💀"} resetGame={resetGame} />
+      ) : null}
     </>
   );
 }

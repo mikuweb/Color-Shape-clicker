@@ -2,7 +2,7 @@ body {
   background-color: #000;
   margin: 0;
   color: #fff;
-  font-family: 'Press Start 2P', cursive;
+  font-family: "Press Start 2P", cursive;
 }
 
 .title {
@@ -71,10 +71,8 @@ body {
 
 .time-left-filled {
   height: 25px;
-  transition: height 0.3s;
   width: 100%;
   background-color: #ffc600;
-  transition: all 2s ease;
 }
 
 .time-left {
@@ -118,11 +116,11 @@ body {
 }
 
 .modal_btn {
-  font-family: 'Press Start 2P', cursive;
+  font-family: "Press Start 2P", cursive;
   font-size: 15px;
   position: relative;
   display: inline-block;
-  padding:10px;
+  padding: 10px;
   text-decoration: none;
   color: #fff;
   background: #fd9535; /*色*/
